@@ -10,7 +10,7 @@ final int SOLDIER_W = 80;
 final int SOLDIER_H = 80;
 final int grid = 80;
 
-int robotX, robotY, soldierX, soldierY, laserX1, laserX2;
+int robotX, robotY, soldierX, soldierY, laserX1, laserX2, laserY, laserSpeed;
 
 PImage bg, groundhog, life, robot, soil, soldier;
 
@@ -28,7 +28,7 @@ void setup(){
   
   //set up robot
   robotX = floor(random(grid*2, width - ROBOT_W));
-  robotY = grid * floor(random(2,6));
+  robotY = floor(random(2,6))*grid;
   
   //set up soldier
   soldierY = grid * floor(random(2,6));
@@ -37,6 +37,8 @@ void setup(){
   //set up laser
   laserX1 = robotX + 25;
   laserX2 = robotX + 25;
+  laserY = robotY +37;
+  laserSpeed = 2;
 }
 
 
@@ -67,17 +69,27 @@ void draw() {
   fill(253,184,19);
   ellipse(width - 50, 50, 120,120);
   
-  //laser move
-  noStroke();
-  fill(255,0,0);
-  rect(laserX2, robotY + 32, 40, 10, 5);
-  laserX2 -= 2;
-  if (laserX2 < laserX1 - grid*2 - 25){
-    laserX2 = laserX1;
-  }
-  
   //put robot
   image(robot, robotX, robotY, ROBOT_W, ROBOT_H);
+  
+  //laser move
+  if(laserX2 - laserX1 < 40){
+    laserX2 -= 0;
+  }else{
+    laserX2 -= laserSpeed;
+  }
+  
+  //laser reset
+  if(robotX - laserX1 >= grid*2-5){
+    laserX1 = robotX+25; 
+    laserX2 = robotX+25;
+  }
+
+
+  laserX1 -= laserSpeed;
+  stroke(255,0,0);
+  strokeWeight(10);
+  line(laserX1, laserY, laserX2, laserY);
   
   //put soldier
 	image(soldier, soldierX, soldierY, SOLDIER_W, SOLDIER_H);
